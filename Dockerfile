@@ -32,6 +32,5 @@ COPY src /opt/program
 
 WORKDIR /opt/program
 RUN chmod +x /opt/program/train
-RUN chmod +x /opt/program/serve
 
 EXPOSE 8080
