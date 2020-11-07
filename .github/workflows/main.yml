@@ -103,13 +103,11 @@ jobs:
       - name: cml_run
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
-          # Install requirements
-          sudo apt-get install unrar
-
           # Pull data & train
-          make data
-          make train
+          dvc pull
+          dvc repro
 
           # Report metrics
           echo "## Metrics" >> report.md
