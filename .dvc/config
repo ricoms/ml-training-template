@@ -1,4 +1,0 @@
-[core]
-    remote = mainremote
-['remote "mainremote"']
-    url = gs://dafiti-python-brasil-2020-workshop
