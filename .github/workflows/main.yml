@@ -92,10 +92,11 @@ jobs:
           make install
           make test
           make coverage
-          
-      - uses: actions/upload-artifact@v2
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
         with:
-          name: coverate-report
+          name: coverage-report
           path: html/
 
   setup-build-publish-deploy:
