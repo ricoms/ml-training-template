@@ -105,8 +105,8 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Install requirements
-          apt-get install unrar
-          
+          sudo apt-get install unrar
+
           # Pull data & train
           make data
           make train
