@@ -54,7 +54,11 @@ jobs:
 
       - name: Run linting
         run: |
-          make install
+          pip install --no-cache-dir pipenv==2020.8.13 \
+            && apt-get update -y \
+            && apt-get install -y --no-install-recommends \
+            && pipenv install --dev --system --ignore-pipfile --deploy --clear
+          docker pull hadolint/hadolint:v1.17.6-3-g8da4f4e-alpine
           make lint
 
   python-test:
@@ -73,7 +77,11 @@ jobs:
 
       - name: Run test
         run: |
-          make install
+          pip install --no-cache-dir pipenv==2020.8.13 \
+            && apt-get update -y \
+            && apt-get install -y --no-install-recommends \
+            && pipenv install --dev --system --ignore-pipfile --deploy --clear
+          
           make test
           make coverage
 
@@ -106,7 +114,7 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Pull data & run-cache from GS and reproduce pipeline
-          dvc pull data --run-cach
+          dvc pull data --run-cache
           dvc repro
 
           # Report metrics
