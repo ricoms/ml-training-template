@@ -80,9 +80,6 @@ jobs:
 
       - name: Run test
         run: |
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install pytest==5.4.1
           make install
           make test
           make coverage
