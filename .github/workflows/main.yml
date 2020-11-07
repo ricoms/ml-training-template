@@ -93,7 +93,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: pull data
+      - name: setup GCP
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
           project_id: ${{secrets.GCLOUD_PROJECT_ID}}
