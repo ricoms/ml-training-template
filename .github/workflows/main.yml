@@ -16,12 +16,9 @@ name: evaluate, build and Integrate to GitHub Packages
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - 'Dockerfile'
-      - 'src/**'
-      - '.github/**'
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
 
 env:
   IMAGE: divorce-evaluator
