@@ -59,7 +59,10 @@ jobs:
             && apt-get install -y --no-install-recommends \
             && pipenv install --dev --system --ignore-pipfile --deploy --clear
           docker pull hadolint/hadolint:v1.17.6-3-g8da4f4e-alpine
-          make lint
+          
+          docker run --rm -i hadolint/hadolint:v1.17.6-3-g8da4f4e-alpine < Dockerfile
+          flake8 src --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 src --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
   python-test:
     runs-on: ubuntu-latest
@@ -82,8 +85,9 @@ jobs:
             && apt-get install -y --no-install-recommends \
             && pipenv install --dev --system --ignore-pipfile --deploy --clear
           
-          make test
-          make coverage
+          pytest -v
+          pytest --cov-report=term-missing --cov=src --cov-fail-under=0.6
+          pytest --cov-report=html --cov=src
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
