@@ -119,6 +119,7 @@ jobs:
         run: |
           # Pull data & run-cache from GS and reproduce pipeline
           dvc pull data --run-cache
+          ls
           dvc repro
 
           # Report metrics
