@@ -21,7 +21,7 @@ class ExperimentArtifacts:
 
     def get_artifacts(self, artifacts: Dict[str, Any]):
         self.metrics = artifacts.get("metrics")
-        self.figures = artifacts.get("figures")
+        self.dataframes = artifacts.get("dataframes")
    
     def save_results(self):
         self._create_if_not_exist()
@@ -30,10 +30,9 @@ class ExperimentArtifacts:
             with open(metrics_path, 'w') as outfile:
                 for k, v in self.metrics.items():
                     outfile.write(f"{k}: {v:.3f}\n")
-        if self.figures:
-            for k, fig in self.figures.items():
-                fig.savefig(str(self.output_prefix / f'{k}.png'))
-
+        if self.dataframes:
+            for k, df in self.dataframes.items():
+                df.to_csv(str(self.output_prefix / f'{k}.csv'), index=False)
 
     def save(self):
         self.save_results()

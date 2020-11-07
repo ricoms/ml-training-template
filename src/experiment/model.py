@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 import joblib
 import matplotlib.pyplot as plt
+import pandas as pd
 from sklearn import svm
 from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.metrics import plot_confusion_matrix
@@ -79,20 +80,16 @@ class ProjectModel(MLModel):
             y_train,
         )
         acc = self.model.score(X_validation, y_validation)
-        disp = plot_confusion_matrix(
-            self.model,
-            X_validation,
-            y_validation,
-            normalize='true',
-            cmap=plt.cm.Blues
-        )
+        y_pred = self.model.predict(X_validation)
+        d = {'actual':y_validation, 'predicted':y_pred}
+        df = pd.DataFrame(d)
         artifacts = {
             "metrics": {
                 "accuracy": acc,
             },
-            "figures": {
-                "confusion_matrix": disp.figure_
-            }
+            "dataframes": {
+                "classes": df
+            },
         }
         return artifacts
 
