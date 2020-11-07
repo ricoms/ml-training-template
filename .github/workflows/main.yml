@@ -98,7 +98,7 @@ jobs:
 
   setup-build-publish-deploy:
     name: Setup, Build, Publish
-    needs: [docker-lint]
+    needs: [docker-lint, python-lint, python-test]
     runs-on: ubuntu-latest
 
     steps:
