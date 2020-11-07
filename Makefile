@@ -5,8 +5,8 @@
 # app.py should pass pylint
 # (Optional) Build a simple integration test
 
-project-name=ml-api-template
-DOCKER_IMAGE_NAME=workshop-ml-api-template
+project-name=ml-training-template
+DOCKER_IMAGE_NAME=workshop-ml-training-template
 
 hyperparameters_file=ml/input/config/hyperparameters.json
 hyperparameters=`cat ${hyperparameters_file}`
