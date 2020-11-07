@@ -1,3 +1,4 @@
 /metrics.txt
 /confusion_matrix.png
 /model.joblib
+/classes.csv
