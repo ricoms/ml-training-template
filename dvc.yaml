@@ -1,12 +1,20 @@
 stages:
+  data:
+    cmd: make data
+    deps:
+    - Makefile
+    outs:
+    - ml/input/data/training/divorce.csv
   train:
     cmd: make train
     deps:
     - Dockerfile
+    - Makefile
     - ml/input/data/training/divorce.csv
     - src
     outs:
     - ml/output/divorce/model.joblib
+    - ml/output/model.tar.gz
     metrics:
     - ml/output/divorce/metrics.txt
     plots:

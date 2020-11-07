@@ -1,8 +1,18 @@
+data:
+  cmd: make data
+  deps:
+  - path: Makefile
+    md5: fea48d18c2d3e0d6152d5dbc9a5e057d
+  outs:
+  - path: ml/input/data/training/divorce.csv
+    md5: 066fe7cbec78bbfcf70f59bb558b9571
 train:
   cmd: make train
   deps:
   - path: Dockerfile
     md5: a54e2cd065ebb44b0c00f08e84d0739d
+  - path: Makefile
+    md5: fea48d18c2d3e0d6152d5dbc9a5e057d
   - path: ml/input/data/training/divorce.csv
     md5: 066fe7cbec78bbfcf70f59bb558b9571
   - path: src
@@ -14,3 +24,5 @@ train:
     md5: b06151bf302ca454c992e705628eef55
   - path: ml/output/divorce/model.joblib
     md5: 200a5d90b4240ebb5cf7b15bae61f5a4
+  - path: ml/output/model.tar.gz
+    md5: 6dfbcfac93ff69e97ce7e15c19807f2e
