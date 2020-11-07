@@ -30,8 +30,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Run hadolint
         run: |
@@ -53,8 +52,7 @@ jobs:
         python-version: [3.8]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
@@ -73,8 +71,7 @@ jobs:
         python-version: [3.8]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v1
@@ -97,14 +94,43 @@ jobs:
           path: htmlcov/
           retention-days: 5
 
-  setup-build-publish-deploy:
+  train-test:
+    name: Train and report
+    needs: [docker-lint, python-lint, python-test]
+    runs-on: [ubuntu-latest]
+    container: docker://dvcorg/cml-py3:latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Install requirements
+          make install
+
+          # Pull data & train
+          make data
+          make train
+
+          # Report metrics
+          echo "## Metrics" >> report.md
+          cat ml/output/divorce/metrics.txt >> report.md
+
+          # Publish confusion matrix diff
+          echo -e "## Plots\n### Class confusions" >> report.md
+          cml-publish ml/output/divorce/confusion_matrix.png --md >> report.md
+
+          cml-send-comment report.md
+
+  setup-build-publish:
     name: Setup, Build, Publish
     needs: [docker-lint, python-lint, python-test]
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
