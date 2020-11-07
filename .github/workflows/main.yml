@@ -98,8 +98,6 @@ jobs:
         env:
           PROJECT_ID: ${{secrets.GCLOUD_PROJECT_ID}}
           APPLICATION_CREDENTIALS: ${{secrets.GOOGLE_APPLICATION_CREDENTIALS}}
-        with:
-          args: dvc pull data --run-cach
 
       - name: cml_run
         shell: bash
