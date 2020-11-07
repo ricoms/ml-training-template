@@ -106,12 +106,13 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
         run: |
           # Pull data & train
-          dvc pull
+          dvc pull data --run-cache
           dvc repro
 
           # Report metrics
           echo "## Metrics" >> report.md
-          cat ml/output/divorce/metrics.txt >> report.md
+          git fetch --prune
+          dvc metrics diff main --show-md >> report.md
 
           # Publish confusion matrix diff
           echo -e "## Plots\n### Class confusions" >> report.md
