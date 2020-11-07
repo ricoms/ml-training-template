@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 
 import joblib
+import matplotlib.pyplot as plt
 from sklearn import svm
 from sklearn.feature_selection import SelectKBest, f_regression
+from sklearn.metrics import plot_confusion_matrix
 from sklearn.pipeline import Pipeline
 
 from utils.logger import logger
@@ -76,11 +78,23 @@ class ProjectModel(MLModel):
             X_train,
             y_train,
         )
-        score = self.model.score(X_validation, y_validation)
-        metrics = {
-            'score': score,
+        acc = self.model.score(X_validation, y_validation)
+        disp = plot_confusion_matrix(
+            self.model,
+            X_validation,
+            y_validation,
+            normalize='true',
+            cmap=plt.cm.Blues
+        )
+        artifacts = {
+            "metrics": {
+                "accuracy": acc,
+            },
+            "figures": {
+                "confusion_matrix": disp.figure_
+            }
         }
-        return metrics
+        return artifacts
 
     def predict(self, ids, X):
         prediction = self.model.predict(X)

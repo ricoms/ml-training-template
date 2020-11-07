@@ -30,7 +30,7 @@ class Experiment:
         )
 
     def train(self):
-        self.history = self.model.train(
+        self.artifacts = self.model.train(
             self.X_train,
             self.y_train,
             self.X_validation,
@@ -47,8 +47,8 @@ class Experiment:
 
         self.train()
 
-        self.artifacts_handler.generate_artifacts(
-            self.history
+        self.artifacts_handler.get_artifacts(
+            self.artifacts
         )
         self.save()
         self.artifacts_handler.create_package_with_models()
