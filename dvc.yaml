@@ -18,4 +18,4 @@ stages:
     metrics:
     - ml/output/divorce/metrics.txt
     plots:
-    - ml/output/divorce/confusion_matrix.png
+    - ml/output/divorce/classes.csv

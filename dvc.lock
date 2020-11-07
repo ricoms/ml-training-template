@@ -16,13 +16,13 @@ train:
   - path: ml/input/data/training/divorce.csv
     md5: 066fe7cbec78bbfcf70f59bb558b9571
   - path: src
-    md5: 255bfd7a4fedeba45d52cab34718baac.dir
+    md5: f70b2fd549767d020bca95604b0576c0.dir
   outs:
-  - path: ml/output/divorce/confusion_matrix.png
-    md5: 14f691e68014d3d1ba61d757ff09c71e
+  - path: ml/output/divorce/classes.csv
+    md5: 0a6e875e32d9a85200d521e24f6a9a87
   - path: ml/output/divorce/metrics.txt
     md5: b06151bf302ca454c992e705628eef55
   - path: ml/output/divorce/model.joblib
     md5: 200a5d90b4240ebb5cf7b15bae61f5a4
   - path: ml/output/model.tar.gz
-    md5: 6dfbcfac93ff69e97ce7e15c19807f2e
+    md5: 929f27a2d1b08105c99cdc3aa4cc645f
