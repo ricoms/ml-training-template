@@ -70,10 +70,15 @@ test:
 	pipenv run pytest -v
 	
 coverage:
-	pipenv run pytest --cov-report=term-missing --cov=src && pytest --cov-report=html
+	pipenv run pytest --cov-report=term-missing --cov=src
+	pipenv run pytest --cov-report=html --cov=src
 
 build-image:
 	docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} .
+
+
+#####################################################
+
 
 check-env-aws:
 ifndef AWS_ACCESS_KEY_ID
