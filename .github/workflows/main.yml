@@ -49,49 +49,54 @@ jobs:
               echo "No erros found on Dockerfile!!"
           fi
 
-  # python-lint:
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       python-version: [3.8]
+  python-lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-  #     - name: Set up Python ${{ matrix.python-version }}
-  #       uses: actions/setup-python@v1
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
 
-  #     - name: Run linting
-  #       run: |
-  #         make install
-  #         make lint
+      - name: Run linting
+        run: |
+          make install
+          make lint
 
-  # python-test:
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     matrix:
-  #       python-version: [3.8]
+  python-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-  #     - name: Set up Python ${{ matrix.python-version }}
-  #       uses: actions/setup-python@v1
-  #       with:
-  #         python-version: ${{ matrix.python-version }}
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
 
-  #     - name: Run test
-  #       run: |
-  #         python3 -m venv venv
-  #         . venv/bin/activate
-  #         pip install pytest==5.4.1
-  #         make install
-  #         make test
-  #         make coverage
+      - name: Run test
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install pytest==5.4.1
+          make install
+          make test
+          make coverage
+          
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverate-report
+          path: html/
 
   setup-build-publish-deploy:
     name: Setup, Build, Publish
