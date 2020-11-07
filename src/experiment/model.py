@@ -1,9 +1,7 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 
 import joblib
 from sklearn import svm
-from sklearn.base import BaseEstimator
 from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.pipeline import Pipeline
 
@@ -30,9 +28,7 @@ class MLModel(ABC):
         pass
 
 
-@dataclass
 class ProjectModel(MLModel):
-    model: BaseEstimator = None
 
     @property
     def model_id(self) -> str:

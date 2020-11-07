@@ -16,12 +16,11 @@ if __name__ == '__main__':
     run_tag = f"{args.project_name}-{args.run_tag}"
     dataset_path = args.input_dir
 
-    model_name = dataset_path.stem
     model = ProjectModel()
 
     artifacts_handler = ExperimentArtifacts(
         run_tag=run_tag,
-        model_name=model_name,
+        model_name=model.model_id,
         base_path=args.output_dir,
     )
     experiment = Experiment(
