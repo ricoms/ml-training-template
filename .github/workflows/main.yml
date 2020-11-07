@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: evaluate, build and Integrate to GitHub Packages
+name: Python CI
 
 on:
   push:
