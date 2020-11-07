@@ -1,0 +1,13 @@
+stages:
+  train:
+    cmd: make train
+    deps:
+    - Dockerfile
+    - ml/input/data/training/divorce.csv
+    - src
+    outs:
+    - ml/output/divorce/model.joblib
+    metrics:
+    - ml/output/divorce/metrics.txt
+    plots:
+    - ml/output/divorce/confusion_matrix.png
