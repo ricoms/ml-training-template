@@ -107,9 +107,6 @@ jobs:
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Install requirements
-          make install
-
           # Pull data & train
           make data
           make train
