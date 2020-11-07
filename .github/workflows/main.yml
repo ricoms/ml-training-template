@@ -86,7 +86,7 @@ jobs:
 
   train-test:
     name: Train and report
-    needs: [docker-lint, python-lint, python-test]
+    # needs: [docker-lint, python-lint, python-test]
     runs-on: [ubuntu-latest]
     container: docker://dvcorg/cml-py3:latest
 

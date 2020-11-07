@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 import joblib
 import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import SelectKBest, f_regression
 from sklearn.metrics import plot_confusion_matrix
 from sklearn.pipeline import Pipeline
@@ -54,16 +54,15 @@ class ProjectModel(MLModel):
 
     def __build_model(self):
         anova_filter = SelectKBest(f_regression, k=5)
-        clf = svm.SVC(kernel='linear')
+        clf = RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
         anova_svm = Pipeline(
             [
                 ('anova', anova_filter),
-                ('svc', clf)
+                ('forest', clf)
             ]
         )
         self.model = anova_svm.set_params(
             anova__k=10,
-            svc__C=.1,
         )
 
     def train(
