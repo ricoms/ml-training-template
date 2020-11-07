@@ -68,7 +68,7 @@ test:
 	
 coverage:
 	pipenv run pytest --cov-report=term-missing --cov=src
-	pipenv run pytest --cov-report=html --cov=src
+	pipenv run pytest --cov-report=html --cov=src --cov-fail-under=0.6
 
 build-image:
 	docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} .
