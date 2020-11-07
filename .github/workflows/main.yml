@@ -21,7 +21,7 @@ on:
     branches: [ main ]
 
 env:
-  IMAGE: divorce-evaluator
+  IMAGE: divorce-trainer
 
 jobs:
   docker-lint:
@@ -112,5 +112,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: docker.pkg.github.com
-          repository: ${{ github.repository }}/divorce-evaluator
+          repository: ${{ github.repository }}/divorce-trainer
           tag_with_sha: true
