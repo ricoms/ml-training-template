@@ -8,12 +8,9 @@
 project-name=ml-api-template
 DOCKER_IMAGE_NAME=workshop-ml-api-template
 
-inputdataconfig_file=ml/input/config/inputdataconfig.json
-inputdataconfig=`cat ${inputdataconfig_file}`
 hyperparameters_file=ml/input/config/hyperparameters.json
 hyperparameters=`cat ${hyperparameters_file}`
-resourceconfig_file=ml/input/config/resourceconfig.json
-resourceconfig=`cat ${resourceconfig_file}`
+
 CURRENT_UID := $(shell id -u)
 time-stamp=$(shell date "+%Y-%m-%d-%H%M%S")
 
@@ -75,63 +72,3 @@ coverage:
 
 build-image:
 	docker build -f Dockerfile -t ${DOCKER_IMAGE_NAME} .
-
-
-#####################################################
-
-
-check-env-aws:
-ifndef AWS_ACCESS_KEY_ID
-	$(error AWS_ACCESS_KEY_ID is undefined)
-endif
-ifndef AWS_SECRET_ACCESS_KEY
-	$(error AWS_SECRET_ACCESS_KEY is undefined)
-endif
-ifndef AWS_DEFAULT_REGION
-	$(error AWS_DEFAULT_REGION is undefined)
-endif
-
-check-env-docker:
-ifndef DOCKER_SERVER
-	$(error DOCKER_SERVER is undefined)
-endif
-
-docker-login: check-env-aws check-env-docker
-	aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${DOCKER_SERVER}/${DOCKER_IMAGE_NAME}
-
-release-image: docker-login
-	docker tag ${DOCKER_IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_SERVER}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG_PUSH} && \
-		docker push ${DOCKER_SERVER}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG_PUSH}
-
-check-env-sagemaker:
-ifndef AWS_PROJECT_BUCKET
-	$(error AWS_PROJECT_BUCKET is undefined)
-endif
-ifndef AWS_SAGEMAKER_ROLE
-	$(error AWS_SAGEMAKER_ROLE is undefined)
-endif
-
-check-parameter-files:
-ifeq ("$(wildcard $(inputdataconfig_file))", "")
-	$(error ${inputdataconfig_file} is non-existent)
-endif
-ifeq ("$(wildcard $(resourceconfig_file))", "")
-	touch ${resourceconfig_file}
-	echo "{\"InstanceType\"=\"ml.m4.xlarge\",\"InstanceCount\"=\"1\",\"VolumeSizeInGB\"=\"10\"}" > ${resourceconfig_file}
-endif
-ifeq ("$(wildcard $(hyperparameters_file))", "")
-	touch ${hyperparameters_file}
-	echo "{}" > ${hyperparameters_file}
-endif
-
-sagemaker-training-job: check-env-aws check-env-docker check-env-sagemaker check-parameter-files
-	aws sagemaker create-training-job \
-		--training-job-name="${TRAINING_JOB_NAME}" \
-		--algorithm-specification="TrainingImage=${DOCKER_SERVER}/${DOCKER_IMAGE_NAME}:${IMAGE_TAG_PUSH},TrainingInputMode=File" \
-		--role-arn="${AWS_SAGEMAKER_ROLE}" \
-		--output-data-config="S3OutputPath=s3://${AWS_PROJECT_BUCKET}/training-jobs/" \
-		--resource-config="${resourceconfig}" \
-		--stopping-condition="MaxRuntimeInSeconds=3600" \
-		--input-data-config="${inputdataconfig}" \
-		--hyper-parameters="${hyperparameters}" \
-		--tags="Key=system,Value=${DOCKER_IMAGE_NAME},Key=role,Value=machine_learning,Key=group,Value=rnd,Key=env,Value=experimentation,Key=company,Value=gfg,Key=type,Value=service"
