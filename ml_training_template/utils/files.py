@@ -1,4 +1,5 @@
 import json
+import logging
 import pickle
 import tarfile
 from abc import ABC, abstractmethod
@@ -12,11 +13,10 @@ from dask.dataframe import from_delayed
 from dask.delayed import delayed
 from pandas import read_csv
 
-from .logger import logger
+logger = logging.getLogger()
 
 
 class BaseFile(ABC):
-
     @staticmethod
     @abstractmethod
     def read(origin, **kwargs):
@@ -29,11 +29,10 @@ class BaseFile(ABC):
 
 
 class ParquetFile(BaseFile):
-
     @staticmethod
     def read(origin: str, dtypes: Dict[str, str] = None) -> dd.core.DataFrame:
         logger.debug(f"read data from {origin}")
-        data = dd.read_parquet(origin, engine='pyarrow')
+        data = dd.read_parquet(origin, engine="pyarrow")
         if dtypes:
             data.columns = list(dtypes.keys())
             data = data.astype(dtypes)
@@ -46,7 +45,6 @@ class ParquetFile(BaseFile):
 
 
 class JsonFile(BaseFile):
-
     @staticmethod
     def read(origin: str, **kwargs) -> dict:
         logger.debug(f"read data from {origin}")
@@ -57,7 +55,7 @@ class JsonFile(BaseFile):
     @staticmethod
     def write(destination: str, content: dict) -> None:
         logger.debug(f"save data to {destination}")
-        with open(destination, 'w') as file:
+        with open(destination, "w") as file:
             json.dump(content, file, sort_keys=True, indent=4)
 
     @staticmethod
@@ -68,7 +66,6 @@ class JsonFile(BaseFile):
 
 
 class YAMLFile(BaseFile):
-
     @staticmethod
     def read(origin: str, **kwargs) -> dict:
         logger.debug(f"read data from {origin}")
@@ -79,7 +76,7 @@ class YAMLFile(BaseFile):
     @staticmethod
     def write(destination: str, content: dict) -> None:
         logger.debug(f"save data to {destination}")
-        with open(destination, 'w') as file:
+        with open(destination, "w") as file:
             yaml.dump(content, file)
 
     @staticmethod
@@ -91,23 +88,21 @@ class YAMLFile(BaseFile):
 
 
 class PickleFile(BaseFile):
-
     @staticmethod
     def read(origin: str, **kwargs) -> dict:
         logger.debug(f"read data from {origin}")
-        with open(origin, 'rb') as file:
+        with open(origin, "rb") as file:
             documents = pickle.load(file)
         return documents
 
     @staticmethod
     def write(destination: str, content) -> None:
         logger.debug(f"save data to {destination}")
-        with open(destination, 'wb') as file:
+        with open(destination, "wb") as file:
             pickle.dump(content, file)
 
 
 class TarFile:
-
     @staticmethod
     def uncompress(origin: str, path: str):
         with tarfile.open(origin) as tar:
@@ -122,17 +117,17 @@ class TarFile:
 
 def convert_gz2parquet(directory, output_dir, output_format, output_chunk_sizes):
     list_of_files = [f for f in Path(str(directory)).glob("*gz")]
-    dfs = [delayed(read_csv)(
-            f, sep=';',
-            header=None,
-            dtype=str,
-            compression='gzip'
-        ) for f in list_of_files]
+    dfs = [
+        delayed(read_csv)(f, sep=";", header=None, dtype=str, compression="gzip")
+        for f in list_of_files
+    ]
     df = from_delayed(dfs)
-    npartitions = 1+df.memory_usage().sum().compute() // output_chunk_sizes
+    npartitions = 1 + df.memory_usage().sum().compute() // output_chunk_sizes
     df = df.repartition(npartitions=npartitions)
 
-    logger.info(f"Converting {len(list_of_files)} files into {npartitions} {output_format} files...")
+    logger.info(
+        f"Converting {len(list_of_files)} files into {npartitions} {output_format} files..."
+    )
     method_name = "to_" + output_format
     method = getattr(df, method_name)
     method(str(output_dir / f"data.{output_format}"))

@@ -15,9 +15,10 @@ CURRENT_UID := $(shell id -u)
 time-stamp=$(shell date "+%Y-%m-%d-%H%M%S")
 
 install:
-	pip install --no-cache-dir pipenv==2020.8.13
-	docker pull hadolint/hadolint:v1.17.6-3-g8da4f4e-alpine
-	pipenv install --dev
+	poetry install --no-dev
+
+dev: install
+	poetry install
 
 data:
 	wget https://archive.ics.uci.edu/ml/machine-learning-databases/00497/divorce.rar -P ml/input/data/training/
@@ -28,28 +29,13 @@ train: build-image ml/input/data/training/divorce.csv
 	docker run --rm \
 		-u ${CURRENT_UID}:${CURRENT_UID} \
 		-v ${PWD}/ml:/opt/ml \
-		${DOCKER_IMAGE_NAME} train \
+		${DOCKER_IMAGE_NAME} python ml_training_template/train \
 			--project_name ${project-name} \
 			--input_dir /opt/ml/input/data/training/divorce.csv
-
-serve: build-image
-	docker run --rm -it \
-		-v $(PWD)/ml:/opt/ml \
-		-p 8080:8080 \
-		${DOCKER_IMAGE_NAME} \
-			serve \
-				--num_cpus=1
-
-predict:
-	./scripts/predict.sh ml/input/api/payload.json application/json
 
 clean:
 	rm -r ml/output/divorce
 	rm ml/output/model.tar.gz
-
-
-data-upload:
-	aws s3 sync ml s3://719003640801-workshop-ml-api-template
 
 # CICD commands
 

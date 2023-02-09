@@ -11,7 +11,7 @@ stages:
     - Dockerfile
     - Makefile
     - ml/input/data/training/divorce.csv
-    - src
+    - ml_training_template
     outs:
     - ml/output/divorce/model.joblib
     - ml/output/model.tar.gz

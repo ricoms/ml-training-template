@@ -1,6 +1,7 @@
 *
-*/
-!src/
-!src/*
-!Pipfile
-!Pipfile.lock
+!pyproject.toml
+!poetry.lock
+!ml_training_template/
+!ml_training_template/*
+!.flake8
+!README.md

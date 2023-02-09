@@ -15,7 +15,6 @@ class ArgParser(ABC):
 
         config = configparser.ConfigParser()
         config.read(self.configuration_file_path)
-
         for key, value in config[self.environment].items():
             os.environ[key.upper()] = value
 
@@ -25,7 +24,7 @@ class ArgParser(ABC):
 
     @property
     def configuration_file_path(self) -> str:
-        return "config.ini"
+        return Path(__file__).parent.parent / "config.ini"
 
     @property
     def hyperparameters_file_name(self) -> str:

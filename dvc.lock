@@ -1,28 +1,41 @@
-data:
-  cmd: make data
-  deps:
-  - path: Makefile
-    md5: fea48d18c2d3e0d6152d5dbc9a5e057d
-  outs:
-  - path: ml/input/data/training/divorce.csv
-    md5: 066fe7cbec78bbfcf70f59bb558b9571
-train:
-  cmd: make train
-  deps:
-  - path: Dockerfile
-    md5: a54e2cd065ebb44b0c00f08e84d0739d
-  - path: Makefile
-    md5: fea48d18c2d3e0d6152d5dbc9a5e057d
-  - path: ml/input/data/training/divorce.csv
-    md5: 066fe7cbec78bbfcf70f59bb558b9571
-  - path: src
-    md5: f70b2fd549767d020bca95604b0576c0.dir
-  outs:
-  - path: ml/output/divorce/classes.csv
-    md5: 0a6e875e32d9a85200d521e24f6a9a87
-  - path: ml/output/divorce/metrics.txt
-    md5: b06151bf302ca454c992e705628eef55
-  - path: ml/output/divorce/model.joblib
-    md5: 200a5d90b4240ebb5cf7b15bae61f5a4
-  - path: ml/output/model.tar.gz
-    md5: 929f27a2d1b08105c99cdc3aa4cc645f
+schema: '2.0'
+stages:
+  data:
+    cmd: make data
+    deps:
+    - path: Makefile
+      md5: 4fc1c8f26a6d55380cc73f39fa476ff6
+      size: 1783
+    outs:
+    - path: ml/input/data/training/divorce.csv
+      md5: 066fe7cbec78bbfcf70f59bb558b9571
+      size: 19192
+  train:
+    cmd: make train
+    deps:
+    - path: Dockerfile
+      md5: 0278185d2a87d1614fa14ca0c92aecbd
+      size: 657
+    - path: Makefile
+      md5: 4fc1c8f26a6d55380cc73f39fa476ff6
+      size: 1783
+    - path: ml/input/data/training/divorce.csv
+      md5: 066fe7cbec78bbfcf70f59bb558b9571
+      size: 19192
+    - path: ml_training_template
+      md5: 8f7ac0a83b83cd385fa88f76fd515646.dir
+      size: 32525
+      nfiles: 23
+    outs:
+    - path: ml/output/divorce/classes.csv
+      md5: 0a6e875e32d9a85200d521e24f6a9a87
+      size: 289
+    - path: ml/output/divorce/metrics.txt
+      md5: b06151bf302ca454c992e705628eef55
+      size: 16
+    - path: ml/output/divorce/model.joblib
+      md5: 1e56ee359cd5f6c23bc7f7bebd570587
+      size: 3402
+    - path: ml/output/model.tar.gz
+      md5: 7ae6330581b04a1750d473416c0924f0
+      size: 2191

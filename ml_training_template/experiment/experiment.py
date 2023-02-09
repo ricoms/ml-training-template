@@ -5,7 +5,7 @@ from typing import Any
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-from .artifacts import ExperimentArtifacts
+from ml_training_template.experiment.artifacts import ExperimentArtifacts
 
 
 @dataclass

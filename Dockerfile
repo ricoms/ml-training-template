@@ -1,35 +1,25 @@
-FROM python:3.8-buster
+FROM python:3.10-buster
 
-LABEL maintainer="ricardo.savii@dafiti.com.br"
+ENV PATH=/usr/local/bin:$PATH \
+    PYTHONUNBUFFERED=TRUE \
+    PYTHONDONTWRITEBYTECODE=TRUE \
+    WORKSPACE_TMP="/opt/reports" \
+    POETRY_VERSION=1.3.2 \
+    OPENBLAS_NUM_THREADS=1
 
-COPY Pipfile Pipfile.lock ./
-RUN pip install --no-cache-dir pipenv==2020.8.13 \
-    && apt-get update -y \
-    && apt-get install -y --no-install-recommends \
-        python3-dev=3.7.3-1 \
-        libev-dev=1:4.25-1 \
-    && pipenv install --system --ignore-pipfile --deploy --clear \
-    && apt-get remove -y gcc python3-dev libssl-dev \
-    && apt-get autoremove -y \
-    && pip uninstall pipenv -y \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && pip install --no-cache-dir "poetry==$POETRY_VERSION" \
+    && rm -r /var/lib/apt/lists/* \
+    && mkdir -p /opt/program \
+    && mkdir -p /opt/reports
 
-# Set some environment variables. PYTHONUNBUFFERED keeps Python from
-# buffering our standard output stream, which means that logs can be
-# delivered to the user quickly. PYTHONDONTWRITEBYTECODE keeps Python
-# from writing the .pyc files which are unnecessary in this case. We
-# also update PATH so that the train and serve programs are found when
-# the container is invoked.
-ENV PYTHONUNBUFFERED=TRUE
-ENV PYTHONDONTWRITEBYTECODE=TRUE
-ENV PATH="/opt/program/:${PATH}"
-ENV ML_PREFIX="/opt/ml/"
-ENV ENVIRON="DOCKER"
-
-# Set up the program and config in the image
-COPY src /opt/program
-
+COPY . /opt/program
 WORKDIR /opt/program
-RUN chmod +x /opt/program/train
 
-EXPOSE 8080
+ARG ENVIRON=production
+
+# hadolint ignore=SC2046
+RUN poetry config virtualenvs.create false \
+    && poetry install \
+        $(if [ "$ENVIRON" = 'production' ]; then echo '--no-dev'; fi) \
+        --no-interaction --no-ansi
